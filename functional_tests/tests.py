@@ -1,3 +1,4 @@
+import os
 import time
 import unittest
 
@@ -14,6 +15,10 @@ class NewVisitorTest(StaticLiveServerTestCase):
 
     def setUp(self):
         self.browser = webdriver.Firefox()
+        staging_server = os.environ.get('STAGING_SERVER')
+        if staging_server:
+            self.live_server_url = 'http://' + staging_server
+
 
     def tearDown(self):
         self.browser.quit()
@@ -118,12 +123,12 @@ class NewVisitorTest(StaticLiveServerTestCase):
     def test_layout_and_styling(self):
         #Edith goes to the home page
         self.browser.get(self.live_server_url)
-        self.browser.set_window_size(1024, 768)
+        self.browser.set_window_size(1280, 768)
 
         # She notices the inputbox is nicely centered
         inputbox = self.browser.find_element_by_id('id_new_item')
         self.assertAlmostEqual(
-            inputbox.location['x'] + inputbox.size['width'] / 2, 512, delta=100
+            inputbox.location['x'] + inputbox.size['width'] / 2, 640, delta=50
         )
 
         # She starts a new list and sees the input is nicely centered there too
@@ -133,7 +138,7 @@ class NewVisitorTest(StaticLiveServerTestCase):
         self.wait_for_row_in_list_table('1: testing')
         inputbox = self.browser.find_element_by_id('id_new_item')
         self.assertAlmostEqual(
-            inputbox.location['x'] + inputbox.size['width'] / 2, 512, delta=100
+            inputbox.location['x'] + inputbox.size['width'] / 2, 640, delta=50
         )
 
 
